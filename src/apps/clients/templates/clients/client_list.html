@@ -1,0 +1,26 @@
+{% extends "content.html" %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href="#"> Clients</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Client name <span class="badge bg-secondary">Archived</span></li>
+{% endblock %}
+
+{% block top-buttons  %}    
+    <a href="" class="btn btn-sm btn-primary">Add client</a>
+    <a href="" class="btn btn-sm btn-outline-secondary">Hide archived</a> 
+{% endblock %}
+
+
+{% block content-main  %}
+    <table class="table table-striped align-middle table-hover">
+      <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col" class="col-11">Client name</th>
+        <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+    </tbody>
+    </table>    
+{% endblock %}

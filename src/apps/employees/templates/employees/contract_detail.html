@@ -1,0 +1,56 @@
+{% extends "content.html" %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href="{% url 'employees:employee-list' %}">Employees</a></li>
+    <li class="breadcrumb-item"><a href="{{ contract.employee.get_absolute_url }}">{{ contract.employee }}</a> {% if not contract.employee.user.is_active %} <span class="badge bg-secondary">Archived</span>{% endif %}</li>
+    <li class="breadcrumb-item">Contracts</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ contract }}</li>
+{% endblock %}
+
+{% block top-buttons %}
+    {% if contract.employee.user.is_active %}
+        {% if perms.employee.change_contract %}
+            <a href="{{ contract.get_update_url }}" class="btn btn-primary btn-sm">Edit</a>
+        {% endif %}
+        {% if perms.employee.delete_contract %}
+            <a href="JavaScript:showModal('{{ contract.get_delete_url }}')"  class="btn btn-danger btn-sm">Delete</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content-main %}
+    <div class="container">
+        <div class="row">
+            <div class="col">Contract ID:</div>
+            <div class="col">{{ contract.id}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Contract name:</div>
+            <div class="col">{{ contract.contract_name}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Sign date:</div>
+            <div class="col">{{ contract.sign_date}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Start date:</div>
+            <div class="col">{{ contract.start_date}}</div>
+        </div>
+        <div class="row">
+            <div class="col">End date:</div>
+            <div class="col">{{ contract.end_date}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Contract type:</div>
+            <div class="col">{{ contract.get_contract_type_display}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Contract scan:</div>
+            <div class="col">{{ contract.contract_scan}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Comments:</div>
+            <div class="col">{{ contract.comment}}</div>
+        </div>
+    </div>
+{% endblock %}

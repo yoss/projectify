@@ -1,0 +1,14 @@
+env/
+.vscode/
+
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+
+src/media/
+src/staticfiles/
+
+notebook.txt
+todo.txt

@@ -1,0 +1,41 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb h2">
+        <li>Rates</li>
+      </ol>
+    </nav>
+    
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group" role="group">
+        {% if perms.rate.add_rate and employee.user.is_active %}
+            <a href="{{ employee.get_rate_create_url }}" class="btn btn-success btn-sm">Add rate</a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+<table class="table table-striped align-middle table-hover">
+    <thead>
+        <tr>
+            <th scope="col" >#</th>
+            <th scope="col" >Chargable rate</th>
+            <th scope="col" >Internal rate</th>
+            <th scope="col" >Start</th>
+            <th scope="col" >End</th>
+            <th scope="col" ></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rate in employee.rate_set.all|dictsortreversed:"start_date" %}
+        <tr scope="row">
+            <td>{{forloop.counter}}</td>
+            <td>{{ rate.chargable }}</td>
+            <td>{{ rate.internal }}</td>
+            <td>{{ rate.start_date }}</td>
+            <td>{{ rate.end_date }}</td>
+            <td><a href="{{ rate.get_absolute_url }}">datails</a> </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,50 @@
+{% extends "content.html" %}
+{% load static %}
+{% load show_avatar %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item active">Employees</li>
+{% endblock %}
+
+{% block top-buttons %}
+    {% if view.kwargs.all %}
+        <a href="{% url 'employees:employee-list' %}" class="btn btn-outline-primary btn-sm">Show active</a>{% endif %}
+    {% if not view.kwargs.all %}
+        <a href="{% url 'employees:employee-list-all' %}" class="btn btn-outline-primary btn-sm">Show all</a>{% endif %}
+    {% if perms.employee.create_employee %}
+        <a href="{% url 'employees:employee-create' %}" class="btn btn-success btn-sm">New Employee</a>{% endif %}
+{% endblock %}
+
+{% block content-main %}
+    {% if employees.count > 0%}
+    <table class="table table-striped align-middle table-hover">
+        <thead>
+            <tr>
+                <th scope="col" >#</th>
+                <th scope="col" ></th>
+                <th scope="col" class="col-4">Name</th>
+                <th scope="col" class="col-4">Email</th>
+                <th scope="col" >Status</th>
+                <th scope="col" >Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr scope="row">
+                <td>{{forloop.counter}}</td>
+                <td>{% show_avatar employee %}</td>
+                <td><a href="{{ employee.get_absolute_url }}">{{ employee }}</a> </td>
+                <td>{{ employee.email }}</td>
+                <td>{% if  employee.user.is_active %} <span class="badge bg-primary">Active</span>{% else %}<span class="badge bg-secondary">Archived</span>{% endif %}</td>
+                <td class="p-1">
+                    <div class="btn-group" role="group">
+
+
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}

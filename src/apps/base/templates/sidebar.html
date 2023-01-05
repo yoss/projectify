@@ -1,0 +1,79 @@
+{% load static %}
+{% load sidebar_link %}
+
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          {% sidebar_link 'Employees' 'employees.view_employee' 'employees:employee-list' 'users' %}
+          {% comment %} {% sidebar_link 'Clients' 'clients.view_client' 'clients:list' 'briefcase' %}
+          {% sidebar_link 'Contracts' 'contracts.view_contract' 'contracts:list' 'file-text' %}
+          {% sidebar_link 'Budgets' 'budgets.view_budget' 'budgets:list' 'dollar-sign' %}
+          {% sidebar_link 'Projects' 'projects.view_project' 'projects:list' 'trello' %} {% endcomment %}
+
+          <li class="nav-item">
+            <a class="nav-link " aria-current="page" href="#">
+              <span data-feather="home"></span>
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="trello"></span>
+              Projects
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'clients:list' %}" >
+              <span data-feather="users"></span>
+              Clients
+
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="bar-chart-2"></span>
+              Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="clipboard"></span>
+              Time reports
+            </a>
+          </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Saved reports</span>
+          <a class="link-secondary" href="#" aria-label="Add a new report">
+            <span data-feather="plus-circle"></span>
+          </a>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text"></span>
+              Current month
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text"></span>
+              Last quarter
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text"></span>
+              Social engagement
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file-text"></span>
+              Year-end sale
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>

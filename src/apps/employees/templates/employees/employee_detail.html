@@ -1,0 +1,101 @@
+{% extends "content.html" %}
+{% load static %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href="{% url 'employees:employee-list' %}">Employees</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{employee}} {% if not employee.user.is_active %} <span class="badge bg-secondary">Archived</span>{% endif %}</li>
+{% endblock %}
+
+{% block top-buttons %}
+    {% if employee.user.is_active %}
+        {% if perms.employee.change_employee %}
+            <a href="{{ employee.get_update_url }}" class="btn btn-primary btn-sm">Edit</a>
+        {% endif %}
+        {% if perms.employee.delete_employee %}
+            <a href="JavaScript:showModal('{{ employee.get_deactivate_url }}')"  class="btn btn-danger btn-sm">Deactivate</a>
+        {% endif %}
+    {% else %}
+        {% if perms.employee.add_employee %}
+            <a href="JavaScript:showModal('{{ employee.get_activate_url }}')"  class="btn btn-success btn-sm">Activate</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content-main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg">
+                {% if employee.avatar %}
+                <img src="{{ employee.avatar.url }}" alt="" class="img-thumbnail">
+                {% endif %}
+            </div>
+            <div class="col-lg">
+                <div class="row">
+                    <div class="col">First name:</div>
+                    <div class="col">{{ employee.first_name}}</div>
+                </div>
+                <div class="row">
+                    <div class="col">Last name:</div>
+                    <div class="col">{{ employee.last_name}}</div>
+                </div>
+                <div class="row">
+                    <div class="col">Email:</div>
+                    <div class="col"><a href="mailto:{{ employee.email}}">{{ employee.email}}</a></div>
+                </div>
+                <div class="row">
+                    <div class="col">NIP:</div>
+                    <div class="col">{{ employee.nip}}</div>
+                </div>
+                <div class="row">
+                    <div class="col">Contract:</div>
+                    <div class="col">
+                        {% if employee.get_current_contract %}
+                            <a href="{{ employee.get_current_contract.get_absolute_url }}">{{ employee.get_current_contract }}</a>
+                        {% else %}
+                            {% if employee.user.is_active %}
+                                <strong>No active contract [<a href="{{ employee.get_contract_create_url }}">Add contract</a>]</strong>
+                            {% endif %}
+                        {% endif %}
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="col">Rates:</div>
+                    <div class="col">
+                        {% if employee.get_current_rate %}
+                            <a href="{{ employee.get_current_rate.get_absolute_url }}">{{ employee.get_current_rate }}</a><br>
+                            <small>Chargable rate: {{ employee.get_current_rate.chargable_rate }}</small><br>
+                            <small>Internal rate: {{ employee.get_current_rate.internal_rate }}</small>
+                        {% else %}
+                            {% if employee.user.is_active %}
+                                <strong>No active rate [<a href="{{ employee.get_rate_create_url }}">Add rate</a>]</strong>
+                            {% endif %}
+                        {% endif %}
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Contracts</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Rates</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Time reports</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    {% include 'employees/contract_list.html' %}
+                </div>
+                <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    {% include 'employees/rate_list.html' %}
+
+                </div>
+                <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">c...</div>
+              </div>
+        </div>
+    </div>
+{% endblock %}

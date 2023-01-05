@@ -1,0 +1,7 @@
+{% if allowed %}
+  <li class="nav-item">
+    <a class="nav-link {% if active %} active {% endif %}" aria-current="page" href="{%  url link %}">
+      <span data-feather="{{icon}}"></span>
+      {{title}}
+    </a>
+{% endif %}

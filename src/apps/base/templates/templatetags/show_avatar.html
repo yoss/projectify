@@ -1,0 +1,7 @@
+{% load static %}
+
+{% if employee.avatar %} 
+    <img src="{{employee.avatar.url}}" alt="" width="32" height="32" class="rounded-circle"> 
+{% else %}
+    <img src="{% static 'img/user.png' %}" alt="" width="32" height="32" class="rounded-circle" style="background: #888888"> 
+{% endif %}     

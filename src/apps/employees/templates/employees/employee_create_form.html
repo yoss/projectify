@@ -1,0 +1,16 @@
+{% extends "content.html" %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item "><a href="{% url 'employees:employee-list' %}">Employees</a></li>
+    <li class="breadcrumb-item active">New employee</li>
+{% endblock %}
+
+{% block top-buttons  %}
+    <a href="{% url 'employees:employee-list' %}" class="btn btn-outline-primary btn-sm">Cancel</a>
+{% endblock %}
+
+
+{% block content-main  %}
+    {% crispy form %}
+{% endblock %}

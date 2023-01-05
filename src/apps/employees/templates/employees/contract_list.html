@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb h2">
+        <li>Contracts</li>
+      </ol>
+    </nav>
+    
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group" role="group">
+        {% if perms.contract.add_contract and employee.user.is_active %}
+            <a href="{{ employee.get_contract_create_url }}" class="btn btn-success btn-sm">Add contract</a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+<table class="table table-striped align-middle table-hover">
+    <thead>
+        <tr>
+            <th scope="col" >#</th>
+            <th scope="col" >Contract name</th>
+            <th scope="col" >Start</th>
+            <th scope="col" >End</th>
+            <th scope="col" >Signed</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contract in employee.contract_set.all|dictsortreversed:"start_date" %}
+        <tr scope="row">
+            <td>{{forloop.counter}}</td>
+            <td><a href="{{ contract.get_absolute_url }}">{{ contract }}</a> </td>
+            <td>{{ contract.start_date }}</td>
+            <td>{{ contract.end_date }}</td>
+            <td>{{ contract.sign_date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

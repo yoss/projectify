@@ -1,0 +1,48 @@
+{% extends "content.html" %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href="{% url 'employees:employee-list' %}">Employees</a></li>
+    <li class="breadcrumb-item"><a href="{{ rate.employee.get_absolute_url }}">{{ rate.employee }}</a> {% if not rate.employee.user.is_active %} <span class="badge bg-secondary">Archived</span>{% endif %}</li>
+    <li class="breadcrumb-item">Rates</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ rate }}</li>
+{% endblock %}
+
+{% block top-buttons %}
+    {% if rate.employee.user.is_active %}
+        {% if perms.employee.change_rate %}
+            <a href="{{ rate.get_update_url }}" class="btn btn-primary btn-sm">Edit</a>
+        {% endif %}
+        {% if perms.employee.delete_rate %}
+            <a href="JavaScript:showModal('{{ rate.get_delete_url }}')"  class="btn btn-danger btn-sm">Delete</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content-main %}
+    <div class="container">
+        <div class="row">
+            <div class="col">Rate ID:</div>
+            <div class="col">{{ rate.id}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Chargable rate:</div>
+            <div class="col">{{ rate.chargable}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Internal rate:</div>
+            <div class="col">{{ rate.internal}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Start date:</div>
+            <div class="col">{{ rate.start_date}}</div>
+        </div>
+        <div class="row">
+            <div class="col">End date:</div>
+            <div class="col">{{ rate.end_date}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Comments:</div>
+            <div class="col">{{ rate.comment}}</div>
+        </div>
+    </div>
+{% endblock %}
