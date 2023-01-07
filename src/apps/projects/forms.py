@@ -8,7 +8,11 @@ from django.utils.html import format_html
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'is_active', 'is_public', 'is_chargable', 'client']
+        fields = ['name', 'is_active', 'is_public', 'is_chargable', 'client', 'managers', 'members']
+        widgets = {
+            'managers': forms.CheckboxSelectMultiple(),
+            'members': forms.CheckboxSelectMultiple(),
+        }
             
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,6 +27,8 @@ class ProjectForm(forms.ModelForm):
         helper.layout = Layout(
             'name',
             'client',
+            'managers',
+            'members',
             'is_active',
             'is_public',
             'is_chargable',
