@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'apps.base', 
     'apps.clients', 
     'apps.employees', 
+    'apps.projects', 
+    'apps.time_reports',
     'apps.sso', 
 ]
 

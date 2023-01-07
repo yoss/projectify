@@ -1,0 +1,33 @@
+{% extends "content.html" %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ project }} 
+        {% if not project.is_active %}<span class="badge bg-secondary">Archived</span>{% endif %}
+    </li>
+{% endblock %}
+
+{% block top-buttons %}
+    {% if project.is_active and perms.projects.change_project %}
+        <a href="{{ project.get_update_url }}" class="btn btn-primary btn-sm">Edit</a>
+    {% endif %}
+    {% if project.is_active and perms.projects.delete_project %}
+        <a href="JavaScript:showModal('{{ project.get_deactivate_url }}')"  class="btn btn-danger btn-sm">Deactivate</a>
+    {% endif %}
+    {% if not project.is_active and perms.projects.delete_project %}
+        <a href="JavaScript:showModal('{{ project.get_activate_url }}')"  class="btn btn-success btn-sm">Activate</a>
+    {% endif %}
+{% endblock %}
+
+{% block content-main %}
+    <div class="container">
+        <div class="row">
+            <div class="col">Project ID:</div>
+            <div class="col">{{ project.id}}</div>
+        </div>
+        <div class="row">
+            <div class="col">Project name:</div>
+            <div class="col">{{ project.name}}</div>
+        </div>
+    </div>
+{% endblock %}

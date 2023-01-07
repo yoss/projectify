@@ -5,6 +5,8 @@
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           {% sidebar_link 'Employees' 'employees.view_employee' 'employees:employee-list' 'users' %}
+          {% sidebar_link 'Projects' 'projects.view_project' 'projects:project-list' 'trello' %}
+          {% sidebar_link 'Time reports' 'projects.view_project' 'projects:project-list' 'clipboard' %}
           {% comment %} {% sidebar_link 'Clients' 'clients.view_client' 'clients:list' 'briefcase' %}
           {% sidebar_link 'Contracts' 'contracts.view_contract' 'contracts:list' 'file-text' %}
           {% sidebar_link 'Budgets' 'budgets.view_budget' 'budgets:list' 'dollar-sign' %}

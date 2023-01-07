@@ -91,16 +91,16 @@ class Contract(models.Model):
     CONTRACT_TYPES = [(PERMANENT, 'Permanent'), (B2B_CONTRACT, 'B2B Contract')]
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    contract_name = models.CharField(blank=False, null=False, max_length=100)
+    name = models.CharField(blank=False, null=False, max_length=100)
     sign_date = models.DateField(blank=False, null=False)
     start_date = models.DateField(blank=False, null=False)
     end_date = models.DateField(blank=True, null=True)
-    contract_scan = models.FileField(upload_to='EmployeeContract/', blank=True)
-    contract_type = models.CharField(blank=False, null=False, choices=CONTRACT_TYPES, max_length=3, default=B2B_CONTRACT)
+    scan = models.FileField(upload_to='EmployeeContract/', blank=True)
+    type = models.CharField(blank=False, null=False, choices=CONTRACT_TYPES, max_length=3, default=B2B_CONTRACT)
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.contract_name
+        return self.name
 
     def have_overlapping_dates(self):
         check_start = self.start_date

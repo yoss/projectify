@@ -78,7 +78,7 @@ class EmployeeUpdateForm(forms.Form):
 class ContractForm(forms.ModelForm):
     class Meta:
         model = Contract
-        fields = ['employee', 'contract_name', 'contract_type', 'start_date', 'end_date', 'sign_date', 'contract_scan', 'comment']
+        fields = ['employee', 'name', 'type', 'start_date', 'end_date', 'sign_date', 'scan', 'comment']
             
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -121,12 +121,12 @@ class ContractForm(forms.ModelForm):
         helper.field_class = 'col-lg-4'
         helper.layout = Layout(
             'employee',
-            'contract_name',
-            'contract_type',
+            'name',
+            'type',
             'sign_date',
             'start_date',
             'end_date',
-            'contract_scan',
+            'scan',
             'comment',
             FormActions(
                 Submit('submit', 'Save', css_class='btn btn-primary btn-sm'),

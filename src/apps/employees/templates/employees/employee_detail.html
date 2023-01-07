@@ -7,17 +7,14 @@
 {% endblock %}
 
 {% block top-buttons %}
-    {% if employee.user.is_active %}
-        {% if perms.employee.change_employee %}
-            <a href="{{ employee.get_update_url }}" class="btn btn-primary btn-sm">Edit</a>
-        {% endif %}
-        {% if perms.employee.delete_employee %}
-            <a href="JavaScript:showModal('{{ employee.get_deactivate_url }}')"  class="btn btn-danger btn-sm">Deactivate</a>
-        {% endif %}
-    {% else %}
-        {% if perms.employee.add_employee %}
-            <a href="JavaScript:showModal('{{ employee.get_activate_url }}')"  class="btn btn-success btn-sm">Activate</a>
-        {% endif %}
+    {% if employee.user.is_active and perms.employees.change_employee %}
+        <a href="{{ employee.get_update_url }}" class="btn btn-primary btn-sm">Edit</a>
+    {% endif %}
+    {% if employee.user.is_active and perms.employees.delete_employee %}
+        <a href="JavaScript:showModal('{{ employee.get_deactivate_url }}')"  class="btn btn-danger btn-sm">Deactivate</a>
+    {% endif %}
+    {% if not employee.user.is_active and perms.employees.delete_employee %}
+        <a href="JavaScript:showModal('{{ employee.get_activate_url }}')"  class="btn btn-success btn-sm">Activate</a>
     {% endif %}
 {% endblock %}
 

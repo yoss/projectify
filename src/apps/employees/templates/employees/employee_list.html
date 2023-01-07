@@ -11,7 +11,7 @@
         <a href="{% url 'employees:employee-list' %}" class="btn btn-outline-primary btn-sm">Show active</a>{% endif %}
     {% if not view.kwargs.all %}
         <a href="{% url 'employees:employee-list-all' %}" class="btn btn-outline-primary btn-sm">Show all</a>{% endif %}
-    {% if perms.employee.create_employee %}
+    {% if perms.employees.create_employee %}
         <a href="{% url 'employees:employee-create' %}" class="btn btn-success btn-sm">New Employee</a>{% endif %}
 {% endblock %}
 

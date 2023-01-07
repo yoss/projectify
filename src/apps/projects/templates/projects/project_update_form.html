@@ -1,0 +1,19 @@
+{% extends "content.html" %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
+    <li class="breadcrumb-item">{{ project }} 
+        {% if not project.is_active %}<span class="badge bg-secondary">Archived</span>{% endif %}
+    </li>
+    <li class="breadcrumb-item active">New project</li>
+{% endblock %}
+
+{% block top-buttons  %}
+    <a href="" class="btn btn-outline-primary btn-sm">Cancel</a>
+{% endblock %}
+
+
+{% block content-main  %}
+    {% crispy form %}
+{% endblock %}
