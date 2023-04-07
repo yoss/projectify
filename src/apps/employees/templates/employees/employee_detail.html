@@ -46,8 +46,8 @@
                 <div class="row">
                     <div class="col">Contract:</div>
                     <div class="col">
-                        {% if employee.get_current_contract %}
-                            <a href="{{ employee.get_current_contract.get_absolute_url }}">{{ employee.get_current_contract }}</a>
+                        {% if current_contract %}
+                            <a href="{{ current_contract.get_absolute_url }}">{{ current_contract }}</a>
                         {% else %}
                             {% if employee.user.is_active %}
                                 <strong>No active contract [<a href="{{ employee.get_contract_create_url }}">Add contract</a>]</strong>
@@ -58,10 +58,10 @@
                 <div class="row">
                     <div class="col">Rates:</div>
                     <div class="col">
-                        {% if employee.get_current_rate %}
-                            <a href="{{ employee.get_current_rate.get_absolute_url }}">{{ employee.get_current_rate }}</a><br>
-                            <small>Chargable rate: {{ employee.get_current_rate.chargable_rate }}</small><br>
-                            <small>Internal rate: {{ employee.get_current_rate.internal_rate }}</small>
+                        {% if current_rate %}
+                            <a href="{{ current_rate.get_absolute_url }}">{{ current_rate }}</a><br>
+                            <small>Chargable rate: {{ current_rate.chargable }}</small><br>
+                            <small>Internal rate: {{ current_rate.internal }}</small>
                         {% else %}
                             {% if employee.user.is_active %}
                                 <strong>No active rate [<a href="{{ employee.get_rate_create_url }}">Add rate</a>]</strong>

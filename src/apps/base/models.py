@@ -4,7 +4,7 @@ from slugify import slugify
 def unique_slugify(instance, string_to_slugify, restricted_slugs=[]):
     slug_value = slugify(string_to_slugify)
     model = instance.__class__
-    hardcoded_restricted_slugs = ['add', 'exec', 'all']
+    hardcoded_restricted_slugs = ['add', 'exec', 'all', 'api']
     
     restricted_slugs = restricted_slugs + hardcoded_restricted_slugs
     if slug_value in restricted_slugs:

@@ -1,5 +1,5 @@
 from django.views import generic
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.utils.html import format_html
@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import Project
 from .forms import ProjectForm
+from django.db import models
+from dal import autocomplete
 
 class ProjectList(PermissionRequiredMixin, generic.ListView):
     permission_required = 'projects.view_project'
@@ -99,3 +101,15 @@ class ProjectActivate(ProjectToggle):
         self.project.save()
         messages.success(request, format_html("Project <strong>{}</strong> has been activated", self.project))
         return redirect(self.project.get_absolute_url())
+
+class ProjectAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+
+        # Don't forget to filter out results depending on the visitor !
+
+        # filter all active visible projects and hidden projects where user is member
+        qs = Project.objects.all().filter(is_active=True).filter(models.Q(is_public=True) | models.Q(members__in=[self.request.user.employee])).order_by('name')  
+        # qs = Project.objects.all().filter(user__is_active=True).order_by('user__last_name')
+        if self.q:
+            qs = qs.filter(models.Q(name__icontains=self.q))
+        return qs

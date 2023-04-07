@@ -7,10 +7,13 @@
 {% endblock %}
 
 {% block top-buttons  %}
-    <a href="" class="btn btn-outline-primary btn-sm">Cancel</a>
+    <a href="{% url 'projects:project-list' %}" class="btn btn-outline-primary btn-sm">Cancel</a>
 {% endblock %}
 
 
 {% block content-main  %}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
     {% crispy form %}
+    {% include 'select2css.html' %}
 {% endblock %}

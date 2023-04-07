@@ -37,7 +37,7 @@
                 <td>
                     {% for manager in project.managers.all %}
                         <a href="{{ manager.get_absolute_url }}">{{ manager }}</a>; 
-                    {% endfor %}
+                    {% endfor %}</td>
                 <td>{% if project.is_active %} <span class="badge bg-primary">Active</span>{% else %}<span class="badge bg-secondary">Archived</span>{% endif %}</td>
                 <td>{% if project.is_public %} <span class="badge bg-primary">Public</span>{% else %}<span class="badge bg-secondary">Hidden</span>{% endif %}</td>
                 <td>{% if project.is_chargable %} <span class="badge bg-primary">Chargable</span>{% else %}<span class="badge bg-secondary">Internal</span>{% endif %}</td>

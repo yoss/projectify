@@ -11,7 +11,7 @@ class Project(models.Model):
     is_chargable = models.BooleanField(default=True)
     client = models.ForeignKey('clients.Client', on_delete=models.CASCADE, blank=True, null=True)
     managers = models.ManyToManyField('employees.Employee', related_name='managers')
-    members = models.ManyToManyField('employees.Employee', related_name='members', null=True, blank=True)
+    members = models.ManyToManyField('employees.Employee', related_name='members', blank=True)
 
     def __str__(self):
         return self.name

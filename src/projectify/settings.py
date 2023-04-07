@@ -27,17 +27,21 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+# Default apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
 # External apps
     'crispy_forms',
     "crispy_bootstrap5",
     'djmoney',
-    
+    'dal',
+    'dal_select2',
+
 # Added own apps
     'apps.base', 
     'apps.clients', 

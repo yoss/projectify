@@ -3,17 +3,20 @@
 
 {% block breadcrumbs  %}
     <li class="breadcrumb-item"><a href="{% url 'projects:project-list' %}">Projects</a></li>
-    <li class="breadcrumb-item">{{ project }} 
+    <li class="breadcrumb-item"><a href="{{ project.get_absolute_url }}">{{ project }}</a> 
         {% if not project.is_active %}<span class="badge bg-secondary">Archived</span>{% endif %}
     </li>
-    <li class="breadcrumb-item active">New project</li>
+    <li class="breadcrumb-item active">Edit</li>
 {% endblock %}
 
 {% block top-buttons  %}
-    <a href="" class="btn btn-outline-primary btn-sm">Cancel</a>
+    <a href="{{ project.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Cancel</a>
 {% endblock %}
 
 
 {% block content-main  %}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
     {% crispy form %}
+    {% include 'select2css.html' %}
 {% endblock %}

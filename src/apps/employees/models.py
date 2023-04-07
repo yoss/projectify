@@ -9,6 +9,35 @@ from djmoney.models.fields import MoneyField
 from PIL import Image
 from ..base.models import unique_slugify
 
+class MonthsInDates:
+    def __init__(self, start_date, end_date):
+        self.start_date_month = start_date.replace(day=1)
+
+        next_month = datetime.date.today().replace(day=28) + datetime.timedelta(days=4)
+        first_day_next_month = next_month.replace(day=1)
+        
+        if end_date is None:
+            self.end_date_month = first_day_next_month
+            return None
+        self.end_date_month = end_date.replace(day=1)
+        return None
+
+    def __iter__(self):
+        self.current_date = self.start_date_month
+        return self
+
+    def next_month(self):
+        if self.current_date.month == 12:
+            self.current_date = self.current_date.replace(year=self.current_date.year+1, month=1, day=1)
+            return
+        self.current_date = self.current_date.replace(month=self.current_date.month+1, day=1)
+
+    def __next__(self):
+        if self.current_date <= self.end_date_month:
+            current_date = self.current_date
+            self.next_month()
+            return current_date
+        raise StopIteration
 
 class Employee(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
@@ -63,7 +92,6 @@ class Employee(models.Model):
     def redirect_if_inactive(self, request, callback):
         if not self.user.is_active:
             messages.error(request, format_html("Employee <strong>{}</strong> is inactive.", self))
-            # messages.error(request, f"Employee <strong>{self}</strong> is inactive.")
             return redirect(self.get_absolute_url())
         return callback
 
@@ -73,11 +101,30 @@ class Employee(models.Model):
 
     def get_current_rate(self):
         today = datetime.date.today()
-        return self.rate_set.filter(start_date__lte=today).filter(models.Q(end_date__gte=today) | models.Q(end_date=None) ).first()
+        return  self.rate_set.filter(start_date__lte=today).filter(models.Q(end_date__gte=today) | models.Q(end_date=None) ).first()
 
     def get_rates_for_period(self, start_date, end_date):
         return self.rate_set.filter(start_date__lte=end_date).filter(models.Q(end_date__gte=start_date) | models.Q(end_date=None) ).all()
 
+
+    def get_empty_time_report(self):
+        contract_month_set = set()
+        tr_month_set = set()
+
+        contracts = self.contract_set.all().order_by('start_date')
+        time_reports = self.timereport_set.all().order_by('start_date')
+
+        for contract in contracts:
+            # print(contract.employee , contract, contract.start_date, contract.end_date)
+            for date_in_contract in MonthsInDates(contract.start_date, contract.end_date):
+                # print (date_in_contract)
+                contract_month_set.add(date_in_contract)
+        for time_report in time_reports:
+            for date_in_time_report in MonthsInDates(time_report.start_date, time_report.start_date):
+                tr_month_set.add(date_in_time_report)
+        month_set = contract_month_set - tr_month_set
+        return sorted(list(month_set))
+    
     def get_absolute_url(self): return reverse("employees:employee-detail", kwargs={"slug": self.slug})
     def get_update_url(self): return reverse("employees:employee-update", kwargs={"slug": self.slug})
     def get_deactivate_url(self): return reverse("employees:employee-deactivate", kwargs={"slug": self.slug})

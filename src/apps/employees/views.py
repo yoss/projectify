@@ -1,11 +1,14 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.html import format_html
 from django.views import generic
+
+from django.db import models
+from dal import autocomplete
 
 from .forms import ContractForm, EmployeeCreateForm, EmployeeUpdateForm, RateForm
 from .models import Contract, Employee, Rate
@@ -49,6 +52,11 @@ class EmployeeDetail(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'employees.view_employee'
     model = Employee
     context_object_name = 'employee'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_rate'] = context['employee'].get_current_rate()
+        context['current_contract'] = context['employee'].get_current_contract()
+        return context
 
 
 class EmployeeUpdate(PermissionRequiredMixin, SuccessMessageMixin, generic.FormView):
@@ -305,3 +313,11 @@ class RateDelete(PermissionRequiredMixin, generic.DeleteView):
         messages.error(request, format_html("Rate for <strong>{}</strong> has been deleted", rate.employee))
         messages.error(request, f"Rate for {rate.employee} has been deleted")
         return redirect(rate.employee.get_absolute_url())
+
+
+class EmployeeAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Employee.objects.all().filter(user__is_active=True).order_by('user__last_name')
+        if self.q:
+            qs = qs.filter(models.Q(user__first_name__icontains=self.q) | models.Q(user__last_name__icontains=self.q))
+        return qs
