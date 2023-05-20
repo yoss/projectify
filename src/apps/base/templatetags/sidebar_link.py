@@ -1,7 +1,6 @@
 from django.urls import reverse
 from django import template
-import html
-import re
+
 
 register = template.Library()
 

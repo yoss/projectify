@@ -5,13 +5,17 @@ from crispy_forms.layout import Layout, Submit, HTML, MultiWidgetField
 from crispy_forms.bootstrap import FormActions
 from django.utils.html import format_html
 
+from dal import autocomplete
+
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'is_active', 'is_public', 'is_chargable', 'client', 'managers', 'members']
         widgets = {
-            'managers': forms.CheckboxSelectMultiple(),
-            'members': forms.CheckboxSelectMultiple(),
+            'client': autocomplete.ModelSelect2(url='clients:client-autocomplete'),
+            'managers': autocomplete.ModelSelect2Multiple(url='employees:employee-autocomplete'),
+            'members': autocomplete.ModelSelect2Multiple(url='employees:employee-autocomplete'),
+            # 'members': forms.CheckboxSelectMultiple(),
         }
             
     def __init__(self, *args, **kwargs):

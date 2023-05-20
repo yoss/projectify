@@ -1,0 +1,90 @@
+{% extends "content.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load get_item %}
+
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href="{{ view.model.get_list_url }}">Time reports</a></li>
+    <li class="breadcrumb-item active">{{ time_report }} 
+        <span class="badge
+            {% if time_report.status == 'submitted' %}  bg-info
+            {% elif time_report.status == 'approved' %} bg-success
+            {% elif time_report.status == 'rejected' %} bg-danger
+            {% elif time_report.status == 'draft' %} bg-secondary
+            {% endif %} 
+        ">{{time_report.status}}</span>
+    </li>
+{% endblock %}
+
+{% block top-buttons %}
+    {% if perms.time_reports.edit_time_report and time_report.status in 'draft,rejected' %}
+        <a class="btn btn-primary btn-sm" href="{{time_report.get_update_url}}">Edit Time report</a>{% endif %}
+{% endblock %}
+
+{% block content-main %}
+
+<div class="table-responsive">
+    {% with weekends=time_report.get_weekend_days%}
+    <table class="table" style="white-space:nowrap; font-size: 13px">        
+        <thead>
+            <tr>
+                <th scope="col">Project</th>
+                {% for day in time_report.days_range %}
+                    <th scope="col" class="text-center" {% if day in weekends%} style="background:#ddd" {% endif %}>{{day}}</th>
+                {% endfor %}
+                <th scope="col" class="text-center">Sum [h]</th>
+                <th scope="col" class="text-center">Net [$]</th>
+                <th scope="col" class="text-center">Gross [$]</th>
+                <th scope="col" class="text-center">Comment</th>
+                <th scope="col" class="text-center">Status</th>
+            </tr>
+        </thead>
+        {% for projectLine in time_report.projectrecord_set.all %}
+        <tr>
+            <td><a href="{{ projectLine.project.get_absolute_url }}">{{ projectLine.project }}</a></td>
+            {% with hours_per_days=projectLine.get_hours_per_days %}
+                {% for day in time_report.days_range %}
+                    <td class="text-center" {% if day in weekends%} style="background:#ddd" {% endif %}>
+                        {% if hours_per_days|get_item:day is not None %}
+                            {{ hours_per_days|get_item:day }}
+                        {% else %} 
+                            -
+                        {% endif %}
+                    </td>
+                {% endfor %}
+
+                <td class="text-center">{{projectLine.total_hours}}</td>
+                <td class="text-center">{{projectLine.total_amount_net}}</td>
+                <td class="text-center">{{projectLine.total_amount_gross}}</td>
+            {% endwith %}
+            <td class="text-center">{{ projectLine.comment }}</td>
+            <td class="text-center">
+                <span class="badge
+                    {% if projectLine.status == 'submitted' %}  bg-info
+                    {% elif projectLine.status == 'approved' %} bg-success
+                    {% elif projectLine.status == 'rejected' %} bg-danger
+                    {% elif projectLine.status == 'draft' %} bg-secondary
+                    {% endif %} 
+                ">
+                {{ projectLine.status }}</td>
+        {% endfor %}
+
+        
+    </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        {% for day in time_report.days_range %}<td></td>{% endfor %}
+        <td class="text-center"><strong>{{ time_report.total_hours }}</strong></td>
+        <td class="text-center"><strong>{{ time_report.total_amount_net }}</strong></td>
+        <td class="text-center"><strong>{{ time_report.total_amount_gross }}</strong></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+    </table>
+    {% endwith %}
+</div>
+
+{% endblock %}

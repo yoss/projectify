@@ -1,0 +1,51 @@
+{% extends "content.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item active">Approvals</li>
+{% endblock %}
+
+{% block top-buttons %}
+{% endblock %}
+
+{% block content-main %}
+    {% if approvals.time_reports %}
+    <h3>Time reports</h3>
+    <table class="table table-striped align-middle table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col" class="col-3">Project</th>
+                <th scope="col" class="col-3">Employee</th>
+                <th scope="col" class="col-1">Hours</th>
+                <th scope="col" class="col-1">Net [$]</th>
+                <th scope="col" class="col-1">Time Report</th>
+                <th scope="col" class="col-3">Comment</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for approval in approvals.time_reports %}
+            <tr scope="row">
+                <td>{{ forloop.counter }}</td>
+                <td><a href="{{approval.project.get_absolute_url}}">{{ approval.project }}</a></td>
+                <td><a href="{{approval.time_report.employee.get_absolute_url}}">{{ approval.time_report.employee}}</a></td>
+                <td>{{ approval.total_hours}}</td>
+                <td>{{ approval.total_amount_net}}</td>
+                <td><a href="{{approval.time_report.get_absolute_url}}">{{ approval.time_report.start_date|date:"M Y" }}</a></td>
+                <td>{{ approval.comment}}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-success btn-sm" href="{{approval.get_approval_url}}">Approve</a>
+                        <a class="btn btn-danger btn-sm" href="{{approval.get_rejection_url}}">Reject</a>
+                        <a class="btn btn-outline-primary btn-sm" href="{{approval.get_detail_url}}">Details</a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+{% endblock %}

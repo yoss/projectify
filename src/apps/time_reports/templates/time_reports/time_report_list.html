@@ -1,0 +1,52 @@
+{% extends "content.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item active">Time reports</li>
+{% endblock %}
+
+{% block top-buttons %}
+    {% if perms.time_reports.create_time_report %}
+        <a class="btn btn-success btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#NewTimeReportPopup">New Time report</a>{% endif %}
+{% endblock %}
+
+{% block content-main %}
+    {% if time_reports.count > 0%}
+    <table class="table table-striped align-middle table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col" class="col-3">Name</th>
+                <th scope="col" class="col-3">Client</th>
+                <th scope="col" class="col-3">Managers</th>
+                <th scope="col">Status</th>
+                <th scope="col">Visibility</th>
+                <th scope="col">Chargability</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for time_report in time_reports %}
+            <tr scope="row">
+                <td>{{ forloop.counter }}</td>
+                <td><a href="{{ time_report.get_absolute_url }}">{{ time_report }}</a></td>
+                <td>{{ time_report.start_date }} </td>
+                <td></td>
+                <td>{{ time_report.status }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No time reports found.</p>
+    {% endif %}
+    <div class="modal fade" id="NewTimeReportPopup" tabindex="-1" aria-labelledby="NewTimeReportPopup" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                {% crispy form %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.employees', 
     'apps.projects', 
     'apps.time_reports',
+    'apps.approvals',
     'apps.sso', 
 ]
 
@@ -148,5 +149,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LOGIN_URL = "sso:login"
+
+CURRENCIES = ('USD', 'EUR', 'PLN', 'RON')
 
 # USE_L10N = True

@@ -106,6 +106,23 @@ class Employee(models.Model):
     def get_rates_for_period(self, start_date, end_date):
         return self.rate_set.filter(start_date__lte=end_date).filter(models.Q(end_date__gte=start_date) | models.Q(end_date=None) ).all()
 
+    def get_dict_of_rates_per_day(self, month_start_date: datetime.date, is_chargable: bool) -> dict():
+        next_month = month_start_date.replace(day=28) + datetime.timedelta(days=4)
+        month_end_date = next_month - datetime.timedelta(days=next_month.day)
+        rates = self.get_rates_for_period(month_start_date, month_end_date)
+        rates_per_day = {}
+        for rate in rates:
+            start = max(rate.start_date, month_start_date)
+            end = month_end_date
+            if rate.end_date is not None:
+                end = min(rate.end_date, month_end_date)
+            for i in range(start.day, end.day + 1):
+                if is_chargable:
+                    rates_per_day[i] = rate.chargable
+                    continue
+                rates_per_day[i] = rate.internal
+        return rates_per_day
+
 
     def get_empty_time_report(self):
         contract_month_set = set()

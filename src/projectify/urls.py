@@ -10,6 +10,8 @@ urlpatterns = [
     path('sso/', include('apps.sso.urls')),
     path('employees/', include('apps.employees.urls')),
     path('projects/', include('apps.projects.urls')),
+    path('time-reports/', include('apps.time_reports.urls')),
+    path('approvals/', include('apps.approvals.urls')),
 ]
 
 if settings.DEBUG:

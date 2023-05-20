@@ -1,0 +1,61 @@
+{% extends "content.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load get_item %}
+
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href={% url 'approvals:approval-list' %}>Approvals</a></li>
+    <li class="breadcrumb-item">{{ approval.time_report.employee}}</li>
+    <li class="breadcrumb-item">Time report</li>
+    <li class="breadcrumb-item active">{{ approval.time_report.start_date|date:"M Y" }}</li>
+{% endblock %}
+
+{% block top-buttons %}
+    <a class="btn btn-success btn-sm" href="{{approval.get_approval_url}}">Approve</a>
+    <a class="btn btn-danger btn-sm" href="{{approval.get_rejection_url}}">Reject</a>
+    <a class="btn btn-outline-primary btn-sm" href="{% url 'approvals:approval-list' %}">Cancel</a>
+{% endblock %}
+
+{% block content-main %}
+    {% if approval_item_type == "Project" %}
+    <div class="table-responsive">
+        {% with weekends=approval.time_report.get_weekend_days%}
+        <table class="table" style="white-space:nowrap; font-size: 13px">        
+            <thead>
+                <tr>
+                    <th scope="col">Project</th>
+                    {% for day in approval.time_report.days_range %}
+                        <th scope="col" class="text-center" {% if day in weekends%} style="background:#ddd" {% endif %}>{{day}}</th>
+                    {% endfor %}
+                    <th scope="col" class="text-center">Sum [h]</th>
+                    <th scope="col" class="text-center">Net [$]</th>
+                    <th scope="col" class="text-center">Gross [$]</th>
+                    <th scope="col" class="text-center">Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="{{ approval.project.get_absolute_url }}">{{ approval.project }}</a></td>
+                    {% with hours_per_days=approval.get_hours_per_days %}
+                        {% for day in approval.time_report.days_range %}
+                            <td class="text-center" {% if day in weekends%} style="background:#ddd" {% endif %}>
+                                {% if hours_per_days|get_item:day is not None %}
+                                    {{ hours_per_days|get_item:day }}
+                                {% else %} 
+                                    -
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    {% endwith %}
+                    <td class="text-center">{{approval.total_hours}}</td>
+                    <td class="text-center">{{approval.total_amount_net}}</td>
+                    <td class="text-center">{{approval.total_amount_gross}}</td>
+                    <td class="text-center">{{approval.comment }}</td>
+                </tr>
+            </tbody>
+        </table>
+        {% endwith %}
+    </div>
+    {% endif %}
+{% endblock %}

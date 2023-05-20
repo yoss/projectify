@@ -1,0 +1,127 @@
+{% extends "content.html" %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs  %}
+    <li class="breadcrumb-item"><a href="{% url 'time_reports:time-report-list' %}">Time reports</a></li>
+    <li class="breadcrumb-item active">{{ time_report }}</li>
+{% endblock %}
+
+{% block top-buttons %}
+    {% if perms.time_reports.create_time_report %}
+        <a class="btn btn-success btn-sm" href="#" id="save">Save</a>
+        <a class="btn btn-primary btn-sm" href="#" id="submit">Submit for approval</a>
+        <a class="btn btn-outline-primary btn-sm" href="{{ time_report.get_absolute_url }}">Cancel</a>
+        {% endif %} 
+{% endblock %}
+
+{% block content-main %}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+
+    <form method="post" class="form-inline" id="time-entry-formset">
+        {{ formset.media.css }}
+        {{ formset.media.js }}
+        {{ formset.management_form|crispy }}
+        {% csrf_token %}
+<div class="table-responsive">
+    <table>           
+        <thead>
+            <tr>
+                <th scope="col">Project</th>
+                {% for day in days%}
+                <th scope="col" class="text-center">{{day}}</th>
+                {% endfor %}
+                <th scope="col" class="text-center">Comment</th>
+                <th scope="col" class="text-center"></th>
+            </tr>
+        </thead>
+        <tbody id="time-report-forms">
+        {% for form in formset.forms %}
+        <tr class="time-report-form">
+            {% for field in form %}
+                {% if field.is_hidden %}
+                    {{ field }}
+                {% else %}
+                    <td>{{ field|as_crispy_field  }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+            {% if form.errors %}
+                <tr>
+                    <td colspan="{{ total_columns }}">
+                        <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li class="invalid-feedback d-block"><strong>{{ field|title }}: {{ error|escape  }}</strong></li>
+                            {% endfor %}
+                        {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        
+    </tbody>
+    </table>
+    <a class="btn btn-success btn-sm" href="#" id="add-new-project">Add new project</a>
+
+    <table id="empty-form" class="d-none">
+        <tbody>
+        <tr>
+            {% for field in formset.empty_form %}
+            {% if field.is_hidden %}
+                {{ field }}
+            {% else %}
+                <td>{{ field|as_crispy_field  }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+    </form> 
+</div>
+    <script>
+        $(document).ready(function() {
+            var formset = $('#time-entry-formset');
+            var emptyForm = formset.find('#empty-form').find('tbody');
+            var invalid_input = formset.find('div>input.is-invalid');
+            var addNewProjectBtn = $('#add-new-project');
+            var saveBtn = $('#save');
+            var submitBtn = $('#submit');
+
+            invalid_input.each(function(){
+                var field_name = $(this).attr("id").split('-')[2].split('_')[0];
+                if (field_name == 'day') {
+                    $(this).css("background-image", "none");
+                }
+            });
+
+            var invalid_feedback_paragraph = formset.find('div>p.invalid-feedback');
+            invalid_feedback_paragraph.each(function(){
+                invalid_feedback_paragraph.remove();
+            });
+            
+            addNewProjectBtn.on('click', function(e) {
+                e.preventDefault();
+                var totalForms = formset.find('.time-report-form').length;
+                var newForm = emptyForm.find('tr').attr("class", "time-report-form");
+                newForm = newForm.prop("outerHTML").replace(/__prefix__/g, totalForms);
+                formset.find('#time-report-forms').append(newForm);
+                formset.find('#id_ProjectLines-TOTAL_FORMS').val(totalForms + 1);
+            });
+
+            saveBtn.on('click', function(e) {
+                e.preventDefault();
+                formset.append('<input type="hidden" name="mode" value="save" />');
+                formset.submit();
+            });
+
+            submitBtn.on('click', function(e) {
+                e.preventDefault();
+                formset.append('<input type="hidden" name="mode" value="submit" />');
+                formset.submit();
+            });
+        });
+    </script>
+    {% include 'select2css.html' %}
+{% endblock %}
